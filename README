@@ -3,4 +3,4 @@
 
 == Installation
    mvn test (optional)
-   mvn install
+   mvn clean install
