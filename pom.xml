@@ -4,7 +4,16 @@
   <artifactId>jwin32-clipboard</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <build>
-    <sourceDirectory>src</sourceDirectory>
+  	<sourceDirectory>/src/main/java</sourceDirectory>
+    <resources>
+    	<resource>
+    		<directory>/src/test/java</directory>
+    	</resource>
+    	<resource>
+    		<directory>/src/test/resources</directory>
+    	</resource>
+    </resources>
+    
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -16,4 +25,17 @@
       </plugin>
     </plugins>
   </build>
+  
+  <dependencies>
+  	<dependency>
+		<groupId>net.java.dev.jna</groupId>
+		<artifactId>jna</artifactId>
+		<version>4.1.0</version>
+	</dependency>
+	<dependency>
+		<groupId>net.java.dev.jna</groupId>
+		<artifactId>jna-platform</artifactId>
+		<version>4.1.0</version>
+	</dependency>
+  </dependencies>
 </project>
