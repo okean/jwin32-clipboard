@@ -4,13 +4,13 @@
   <artifactId>jwin32-clipboard</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <build>
-  	<sourceDirectory>/src/main/java</sourceDirectory>
+  	<sourceDirectory>src/main/java</sourceDirectory>
     <resources>
     	<resource>
-    		<directory>/src/test/java</directory>
+    		<directory>src/test/java</directory>
     	</resource>
     	<resource>
-    		<directory>/src/test/resources</directory>
+    		<directory>src/test/resources</directory>
     	</resource>
     </resources>
     
@@ -36,6 +36,12 @@
 		<groupId>net.java.dev.jna</groupId>
 		<artifactId>jna-platform</artifactId>
 		<version>4.1.0</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.testng</groupId>
+	  <artifactId>testng</artifactId>
+	  <version>6.1.1</version>
+	  <scope>test</scope>
 	</dependency>
   </dependencies>
 </project>
