@@ -14,4 +14,6 @@ public interface Kernel32 extends StdCallLibrary {
 	Pointer GlobalAlloc(int uFlags, int dwBytes);
 	Pointer GlobalLock(Pointer hMem);
 	Pointer GlobalFree(Pointer hMem);
+	int GlobalSize(Pointer hMem);
+	boolean GlobalUnlock(Pointer hMem);
 }

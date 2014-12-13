@@ -14,4 +14,6 @@ public interface User32 extends StdCallLibrary {
 	boolean EmptyClipboard();
 	Pointer SetClipboardData(int uFormat, Pointer hMem);
 	boolean CloseClipboard();
+	boolean IsClipboardFormatAvailable(int format);
+	Pointer GetClipboardData(int uFormat);
 }

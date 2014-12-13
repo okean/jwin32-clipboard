@@ -1,12 +1,17 @@
 package win32.clipboard;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+
+import win32.clipboard.structures.BITMAPINFO;
 
 import com.sun.jna.Pointer;
 
 import static java.util.Arrays.copyOfRange;
 import static win32.clipboard.Functions.*;
 import static win32.clipboard.Constants.*;
+import static win32.clipboard.Util.*;
 
 public class Clipboard {
 
@@ -15,8 +20,11 @@ public class Clipboard {
 	public static final int UNICODETEXT = 13;
 	public static final int DIB = 8;
 	public static final int BITMAP = 2;
+	public static final int HDROP = 15;
+	public static final int ENHMETAFILE = 14;
 
 	private static final int BITMAP_FILE_HEADER_SIZE = 14;
+	private static final int BITMAP_INFO_HEADER_SIZE = 40;
 
 	private static final Charset UTF16LE = Charset.forName("UTF-16LE");
 	private static final Charset FILE_ENCODING = Charset.forName(System
@@ -81,6 +89,156 @@ public class Clipboard {
 	
 	public static void setData(Object clipdata) throws SystemCallError {
 		setData(clipdata, TEXT);
+	}
+	
+	public static Object getData(int format) throws Exception {
+		Object clipdata = null;
+		try {
+			open();
+
+			if (isClipboardFormatAvailable(format)) {
+				Pointer handle = getClipboardData(format);
+				
+				switch(format) {
+				case TEXT:
+				case OEMTEXT:
+				case UNICODETEXT:
+					Charset enc = (format == UNICODETEXT) ? UTF16LE : FILE_ENCODING;
+					clipdata = getTextData(handle, enc);
+					break;
+				case DIB:
+				case BITMAP:
+					clipdata = getImageData(handle);
+					break;
+				case HDROP:
+					clipdata = getFileList(handle);
+					break;
+				case ENHMETAFILE:
+					clipdata = getMetafileData(handle);
+					break;
+				default:
+					throw new IllegalArgumentException("Format '" + format
+							+ "'  not supported");
+				}
+			} else {
+				clipdata = "";
+			}
+		} finally {
+			close();
+		}
+		return clipdata;
+	}
+	
+	public static Object getData() throws Exception {
+		return getData(TEXT);
+	}
+	
+	/**
+	 * Get text data.
+	 * 
+	 * @param handle to a clipboard object in the specified format
+	 * @param encoding used to construct a string given the charset
+	 * @return text from clipboard
+	 */
+	private static String getTextData(Pointer handle, Charset encoding) {
+		int size = globalSize(handle);
+		Pointer ptr = globalLock(handle);
+		
+		byte[] buf = new byte[size];
+		ptr.read(0, buf, 0, size);
+		return new String(buf, encoding).trim();
+	}
+	
+	/**
+	 * Get data for bitmap files.
+	 * @param handle to a clipboard object in the specified format.
+	 * @return an array of bytes representing bitmap file.
+	 * @throws Exception thrown if invalid bit.
+	 */
+	private static byte[] getImageData(Pointer handle) throws Exception {
+		byte[] clipdata = null;
+		int tableSize = 0;
+
+		try {
+			Pointer ptr = globalLock(handle);
+			int size = globalSize(handle);
+
+			BITMAPINFO bmi = new BITMAPINFO(ptr);
+
+			int fileSize = size + BITMAP_FILE_HEADER_SIZE;
+
+			switch (bmi.bmiHeader.biBitCount) {
+			case 1:
+				tableSize = 2;
+				break;
+			case 4:
+				tableSize = 16;
+				break;
+			case 8:
+				tableSize = 256;
+				break;
+			case 16:
+			case 32:
+				if (bmi.bmiHeader.biCompression == BI_RGB) {
+					tableSize = bmi.bmiHeader.biClrUsed;
+				} else if (bmi.bmiHeader.biCompression == BI_BITFIELDS) {
+					tableSize = bmi.bmiHeader.biClrUsed;
+					if (bmi.bmiHeader.biSize == BITMAP_INFO_HEADER_SIZE)
+						tableSize += 3;
+				} else {
+					throw new Exception("Invalid bit/compression combination");
+				}
+				break;
+			case 24:
+				tableSize = bmi.bmiHeader.biClrUsed;
+				break;
+			default:
+				throw new Exception("Invalid bit count");
+			}
+			
+			int offset = BITMAP_FILE_HEADER_SIZE + bmi.bmiHeader.biSize + (tableSize * 4);
+			
+			byte[] buf = new byte[size];
+			ptr.read(0, buf, 0, size);
+			
+			clipdata = concatBytes(getByte("BM"), toByte(fileSize), toByte(0000),
+					toByte(offset), buf);
+		} finally {
+			if (handle != null)
+				globalUnlock(handle);
+		}
+		return clipdata;
+	}
+	
+	/**
+	 * Get and return a list of file names that have been copied.
+	 * @param handle to a clipboard object in the specified format.
+	 * @return 
+	 */
+	private static List<String> getFileList(Pointer handle) {
+		List<String> fileList = new ArrayList<String>();
+		int count = dragQueryFile(handle, 0xFFFFFFFF, null, 0);
+
+		for (int i = 0; i < count; i++) {
+			int size = dragQueryFile(handle, i, null, 0) + 1;
+			char[] buf = new char[size];
+			dragQueryFile(handle, i, buf, buf.length);
+			fileList.add(new String(buf));
+		}
+
+		return fileList;
+	}
+	
+	/**
+	 * Get data for enhanced metadata files.
+	 * @param handle to a clipboard object in the specified format.
+	 * @return  buffer that receives the metafile data
+	 */
+	private static byte[] getMetafileData(Pointer handle) {
+		int size = getEnhMetaFileBits(handle, 0, null);
+		byte[] buf = new byte[size];
+		getEnhMetaFileBits(handle, buf.length, buf);
+		return buf;
 	}
 
 	/**
