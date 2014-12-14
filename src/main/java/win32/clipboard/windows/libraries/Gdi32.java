@@ -1,4 +1,4 @@
-package win32.clipboard.libraries;
+package win32.clipboard.windows.libraries;
 
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;

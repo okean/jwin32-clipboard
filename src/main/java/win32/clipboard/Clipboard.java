@@ -4,14 +4,15 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import win32.clipboard.structures.BITMAPINFO;
+import win32.clipboard.windows.SystemCallError;
+import win32.clipboard.windows.structures.BITMAPINFO;
 
 import com.sun.jna.Pointer;
 
 import static java.util.Arrays.copyOfRange;
-import static win32.clipboard.Functions.*;
-import static win32.clipboard.Constants.*;
 import static win32.clipboard.Util.*;
+import static win32.clipboard.windows.Constants.*;
+import static win32.clipboard.windows.Functions.*;
 
 public class Clipboard {
 

@@ -4,6 +4,7 @@ import junit.framework.Assert;
 
 import org.testng.annotations.Test;
 
+import win32.clipboard.windows.SystemCallError;
 import static win32.clipboard.Clipboard.*;
 
 public class TestClipboard {

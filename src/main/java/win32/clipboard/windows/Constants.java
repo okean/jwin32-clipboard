@@ -1,4 +1,4 @@
-package win32.clipboard;
+package win32.clipboard.windows;
 
 public class Constants {
 

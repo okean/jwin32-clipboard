@@ -1,4 +1,4 @@
-package win32.clipboard;
+package win32.clipboard.windows;
 
 import static com.sun.jna.platform.win32.Kernel32Util.formatMessage;
 

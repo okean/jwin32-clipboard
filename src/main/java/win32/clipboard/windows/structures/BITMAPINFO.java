@@ -1,4 +1,4 @@
-package win32.clipboard.structures;
+package win32.clipboard.windows.structures;
 
 import java.util.Arrays;
 import java.util.List;
