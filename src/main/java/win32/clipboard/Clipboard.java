@@ -91,6 +91,46 @@ public class Clipboard {
 		setData(clipdata, TEXT);
 	}
 	
+	/**
+	 * Empties the contents of the clipboard.
+	 * @throws SystemCallErrorf failing to call win api functions
+	 */
+	public static void empty() throws SystemCallError {
+		try {
+			open();
+			clearIfOpened();
+		} finally {
+			close();
+		}
+	}
+	
+	/**
+	 * Alias for Clipboard.empty()
+	 */
+	public static void clear() throws SystemCallError {
+		empty();
+	}
+	
+	/**
+	 * Return data from clipboard.
+	 * 
+	 * If there is no data in the clipboard, or data is available but the 
+	 * format doesn't match the data, then an empty string is returned.
+	 * 
+	 * Example:
+	 * 	* Get some plain text
+	 * 	Clipboard.getData(Clipboard.TEXT);
+	 * 
+	 * 	* Get a list of files copied from the Windows Explorer window.
+	 *  Clipboard.getData(Clipboard.HDROP);
+	 *  
+	 *  * Get a bitmap image
+	 *  Clipboard.getData(Clipboard.DIB);
+	 * 
+	 * @param format to attempt to retrieve the data in
+	 * @return the data currently in the clipboard
+	 * @throws Exception in case of invalid format, api call or bit count error
+	 */
 	public static Object getData(int format) throws Exception {
 		Object clipdata = null;
 		try {

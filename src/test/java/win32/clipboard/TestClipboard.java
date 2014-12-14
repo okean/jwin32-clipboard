@@ -68,4 +68,23 @@ public class TestClipboard {
 		setData("foo");
 		Assert.assertEquals("foo", getData());
 	}
+	
+	@Test(description = "empty method basic functionality")
+	public void e_01() throws SystemCallError {
+		empty();
+	}
+	
+	@Test(description = "Empties the contents of the clipboard")
+	public void e_02() throws Exception {
+		setData("foo");
+		empty();
+		Assert.assertEquals("", getData());
+	}
+	
+	@Test(description = "clear is an alias for empty")
+	public void e_03() throws Exception {
+		setData("foo");
+		clear();
+		Assert.assertEquals("", getData());
+	}
 }
