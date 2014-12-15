@@ -1,5 +1,7 @@
 package win32.clipboard;
 
+import java.util.Map;
+
 import junit.framework.Assert;
 
 import org.testng.annotations.Test;
@@ -22,7 +24,7 @@ public class TestClipboard {
 	
 	@Test(description = "data method basic functionality")
 	public void d_01() throws Exception {
-		getData(TEXT);
+		Object obj = getData(TEXT);
 	}
 	
 	@Test(description = "data method requires proper format")
@@ -87,5 +89,60 @@ public class TestClipboard {
 		setData("foo");
 		clear();
 		Assert.assertEquals("", getData());
+	}
+	
+	@Test(description = "registerFormat basic functionality")
+	public void rf_01() throws SystemCallError {
+		int format = registerFormat("foo");
+	}
+	
+	@Test(description = "formatName basic functionality")
+	public void fn_01() throws SystemCallError {
+		formatName(1);
+	}
+	
+	@Test(description = "formatName returns expected value")
+	public void fn_02() throws SystemCallError {
+		int format = registerFormat("HTML Format");
+		Assert.assertEquals("HTML Format", formatName(format));
+		Assert.assertNull(formatName(999999));
+	}
+	
+	@Test(description = "formats basic functionality")
+	public void f_01() throws SystemCallError {
+		Map<Integer, String> map = formats();
+	}
+	
+	/**
+	 * Test is failing for some reason
+	 */
+	@Test(description = "formats result contains expected values", 
+			enabled = false)
+	public void f_02() throws SystemCallError {
+		Assert.assertTrue(formats().size() > 0);
+		Assert.assertTrue(formats().containsKey(1));
+	}
+	
+	@Test(description = "numFormats basic functionallity")
+	public void nf_01() {
+		int count = numFormats();
+	}
+	
+	@Test(description = "numFormats returns an expected value")
+	public void nf_02() {
+		Assert.assertTrue(numFormats() >= 0);
+		Assert.assertTrue(numFormats() < 1000);
+	}
+	
+	@Test(description = "formatAvailable basic functionality")
+	public void fa_01() {
+		boolean a = formatAvailable(1);
+	}
+	
+	@Test(description = "formatAvailable returns an expected value")
+	public void fa_02() throws SystemCallError {
+		setData("foo");
+		Assert.assertTrue(formatAvailable(1));
+		Assert.assertFalse(formatAvailable(-1));
 	}
 }

@@ -16,4 +16,8 @@ public interface User32 extends StdCallLibrary {
 	boolean CloseClipboard();
 	boolean IsClipboardFormatAvailable(int format);
 	Pointer GetClipboardData(int uFormat);
+	int GetClipboardFormatName(int format, char[] lpszFormatName, int cchMaxCount);
+	int RegisterClipboardFormat(String lpszFormat);
+	int EnumClipboardFormats(int format);
+	int CountClipboardFormats();
 }

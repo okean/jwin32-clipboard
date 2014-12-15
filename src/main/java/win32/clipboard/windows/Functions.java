@@ -38,6 +38,22 @@ public class Functions {
 		return user32.GetClipboardData(uFormat);
 	}
 	
+	public static int getClipboardFormatName(int format, char[] lpszFormatName, int cchMaxCount) {
+		return user32.GetClipboardFormatName(format, lpszFormatName, cchMaxCount);
+	}
+	
+	public static int registerClipboardFormat(String lpszFormat) {
+		return user32.RegisterClipboardFormat(lpszFormat);
+	}
+	
+	public static int enumClipboardFormats(int format) {
+		return user32.EnumClipboardFormats(format);
+	}
+	
+	public static int countClipboardFormats() {
+		return user32.CountClipboardFormats();
+	}
+	
 	public static int getLastError() {
 		return kernel32.GetLastError();
 	}

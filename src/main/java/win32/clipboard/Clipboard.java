@@ -2,7 +2,9 @@ package win32.clipboard;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import win32.clipboard.windows.SystemCallError;
 import win32.clipboard.windows.structures.BITMAPINFO;
@@ -110,6 +112,91 @@ public class Clipboard {
 	 */
 	public static void clear() throws SystemCallError {
 		empty();
+	}
+	
+	/**
+	 * Retrieves from the clipboard the name of the specified registered format.
+	 * 
+	 * @param format
+	 *            the type of format to be retrieved. This parameter must not
+	 *            specify any of the predefined clipboard formats.
+	 * @return if the function succeeds, the return value is the length, in
+	 *         characters, of the string copied to the buffer.
+	 * @throws SystemCallError
+	 *             if the function fails, the return value is zero, indicating
+	 *             that the requested format does not exist or is predefined.
+	 */
+	public static String formatName(int format) throws SystemCallError {
+		char buf[] = null;
+		try {
+			open();
+			buf = new char[80];
+			getClipboardFormatName(format, buf, buf.length);
+		} finally {
+			close();
+		}
+		String str = new String(buf).trim(); 
+		return (str.length() > 0) ? str : null;
+	}
+	
+	/**
+	 * Registers a new clipboard format.
+	 * 
+	 * @param format
+	 *            the name of the new format.
+	 * @return if the function succeeds, the return value identifies the
+	 *         registered clipboard format.
+	 * @throws SystemCallError
+	 *             if fails to call win api
+	 */
+	public static int registerFormat(String format) throws SystemCallError {
+		int formatValue = registerClipboardFormat(format);
+		if (formatValue == 0)
+			throw new SystemCallError(getLastError());
+		return formatValue;
+	}
+	
+	/**
+	 * @return a hash of all the current formats, with the format number as the
+	 *         key and the format name as the value for that key.
+	 * @throws SystemCallError  if fails to call win api
+	 */
+	public static Map<Integer, String> formats() throws SystemCallError {
+		HashMap<Integer, String> formats = new HashMap<Integer, String>();
+		int format = 0;
+		try {
+			open();
+			while (0 != (format = enumClipboardFormats(format))) {
+				char[] buf = new char[80];
+				getClipboardFormatName(format, buf, buf.length);
+				String str = new String(buf).trim();
+				str = str.length() > 0 ? str : null;
+				formats.put(format, str);
+			}
+		} finally {
+			close();
+		}
+		return formats.isEmpty() ? null : formats;
+	}
+	
+	/**
+	 * Retrieves the number of different data formats currently on the clipboard.
+	 * 
+	 * @return the return value is the number of different data formats
+	 *         currently on the clipboard.
+	 */
+	public static int numFormats() {
+		return countClipboardFormats();
+	}
+	
+	/**
+	 * Determines whether the clipboard contains data in the specified format.
+	 * 
+	 * @param format a standard or registered clipboard format.
+	 * @return is nonnzero if clipboard available.
+	 */
+	public static boolean formatAvailable(int format) {
+		return isClipboardFormatAvailable(format);
 	}
 	
 	/**
