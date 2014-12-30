@@ -12,7 +12,7 @@ import static com.sun.jna.platform.win32.Kernel32Util.formatMessage;
 
 public abstract class AbstractClipboardMonitor implements Runnable,
 		IClipboardMonitor {
-	private  Thread thread;
+	private Thread thread;
 	private Pointer hwnd;
 	private CyclicBarrier barrier;
 
@@ -46,10 +46,9 @@ public abstract class AbstractClipboardMonitor implements Runnable,
 			throw new RuntimeException("Unable to create clipboard window. "
 					+ formatMessage(getLastError()));
 
-		if (!addClipboardFormatListener(hwnd)) {
+		if (!addClipboardFormatListener(hwnd))
 			throw new RuntimeException("Unable to install clipboard listener. "
 					+ formatMessage(getLastError()));
-		}
 		
 		try {
 			barrier.await();
