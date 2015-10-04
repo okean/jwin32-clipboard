@@ -8,16 +8,16 @@ import com.sun.jna.Structure;
 
 public class MSG extends Structure {
 
-	public Pointer hWnd;
-	public int message;
-	public int wParam;
-	public int lParam;
-	public int time;
-	public int x;
-	public int y;
+    public Pointer hWnd;
+    public int message;
+    public int wParam;
+    public int lParam;
+    public int time;
+    public int x;
+    public int y;
 
-	protected List<String> getFieldOrder() {
-		return Arrays.asList("hWnd", "message", "wParam", "lParam", "time",
-				"x", "y");
-	}
+    protected List<String> getFieldOrder() {
+        return Arrays.asList("hWnd", "message", "wParam", "lParam", "time",
+                "x", "y");
+    }
 }
