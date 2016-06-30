@@ -8,6 +8,10 @@
   <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        
+        <!-- Plugins -->
+        <serviceName>Local</serviceName>
+        <serviceJobId>0</serviceJobId>
   </properties>    
     
     <build>
@@ -50,6 +54,16 @@
                     <maxmem>256m</maxmem>
                     <!-- aggregated reports for multi-module projects -->
                     <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.2.0</version>
+                <configuration>
+                    <repoToken>am8nTKhrrRTdSM04Rk929SbHXzcL8jbbQ</repoToken>
+                    <serviceName>${serviceName}</serviceName>
+                    <serviceJobId>${serviceJobId}</serviceJobId>
                 </configuration>
             </plugin>            
         </plugins>
