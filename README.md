@@ -1,5 +1,6 @@
 ##jwin32-clipboard
 [![Build status](https://ci.appveyor.com/api/projects/status/ewgmakqbnbtg5naq?svg=true)](https://ci.appveyor.com/project/okean/jwin32-clipboard)
+[![Coverage Status](https://coveralls.io/repos/github/okean/jwin32-clipboard/badge.svg?branch=master)](https://coveralls.io/github/okean/jwin32-clipboard?branch=master)
 
 Java library for interacting with the Win32 clipboard
 
