@@ -1,5 +1,7 @@
-### Description
-jwin32-clipboard - a Java library for interacting with the Win32 clipboard
+##jwin32-clipboard
+[![Build status](https://ci.appveyor.com/api/projects/status/ewgmakqbnbtg5naq?svg=true)](https://ci.appveyor.com/project/okean/jwin32-clipboard)
+
+Java library for interacting with the Win32 clipboard
 
 ### Installation
 ```
