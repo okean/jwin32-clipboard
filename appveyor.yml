@@ -20,6 +20,7 @@ build_script:
   - mvn clean package --batch-mode -DskipTest
 test_script:
   - mvn clean install --batch-mode
+  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report -DserviceName=appveyor-ci -DserviceJobId='{build}'
 cache:
   - C:\maven\
   - C:\Users\appveyor\.m2
