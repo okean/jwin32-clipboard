@@ -4,6 +4,12 @@
     <groupId>win32.clipboard</groupId>
     <artifactId>clipboard</artifactId>
     <version>1.0</version>
+    
+  <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>    
+    
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
